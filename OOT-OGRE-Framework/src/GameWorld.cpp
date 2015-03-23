@@ -11,6 +11,8 @@
 #include <iostream>
 #include <sstream>
 
+#include "Util.h"
+
 #define STEP_LENGTH 0.03
 
 GameWorld::GameWorld(OgreApplication* application_) 
@@ -53,13 +55,13 @@ void GameWorld::CreateGUI()
 
 void GameWorld::CreateEntities()
 {
+	
 	// Create a material object named "RED" and a material object "GREEN"
 	application->SetEntityColour("RED", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::ColourValue(1.0f, 0.1f, 0.1f), Ogre::ColourValue(0.6f, 0.0f, 0.0f), 100.0f);
 	application->SetEntityColour("GREEN", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::ColourValue(0.1f, 0.8f, 0.1f), Ogre::ColourValue(0.0f, 0.6f, 0.0f), 50.0f);
 
 	heli = new Helicopter(Ogre::Vector3(0,300,0));
-	heli->setActor(application, 90.0f, 200.0f, "helicopter.mesh", "green.png");
-	heli->setRotorSpeed(720, 720);
+	heli->setActor(application, 90.0f, 200.0f, "helicopter.mesh", "green.png", nullptr);
 }
 
 // Create a ogre world environment with a predefined geometry and a texture
@@ -138,18 +140,24 @@ void GameWorld::CreateLights()
 
 void GameWorld::Run()
 {
-	// Create a camera
-	Ogre::String cameraName = "MainCamera";
-	auto cameraNode = application->CreateCamera(cameraName);
-	cameraNode->setPosition(Ogre::Vector3(-80.0f, 60.0f, -80.0f));
-	static_cast<Ogre::Camera*>(cameraNode->getAttachedObject("MainCamera"))->lookAt(0.0f, 0.0f, 0.0f);
-	shared_ptr<Ogre::MovableObject> cameraObject;
-	cameraObject.reset(cameraNode->getAttachedObject("MainCamera"));
-	std::shared_ptr<Camera> camera = make_shared<Camera>(cameraNode, cameraObject);
-
+	
 	//Create the game world
      InitilaiseScene();
 	
+	 // Create a camera
+	 Ogre::String cameraName = "MainCamera";
+	 auto cameraNode = application->CreateCamera(cameraName, 
+		 application->GetSceneManager()->getSceneNode(heli->getNodeName()));
+	// cameraNode->setPosition(Ogre::Vector3(-80.0f, 60.0f, -80.0f));
+
+	 cameraNode->translate(0.0f, 0.0f, -80.0f, Ogre::Node::TS_WORLD);
+	 //cameraNode->setAutoTracking(true, application->GetSceneManager()->getSceneNode(heli->getNodeName()));
+	 static_cast<Ogre::Camera*>(cameraNode->getAttachedObject("MainCamera"))->lookAt(heli->getPos());
+	 shared_ptr<Ogre::MovableObject> cameraObject;
+	 cameraObject.reset(cameraNode->getAttachedObject("MainCamera"));
+	 
+	 std::shared_ptr<Camera> camera = make_shared<Camera>(cameraNode, cameraObject);
+
 	//Create input device listeners 
 	application->CreateIOS();
 	auto keyboard = application->GetKeyboard();
@@ -165,6 +173,7 @@ void GameWorld::Run()
     double timeToUpdate = 0.0;
     unsigned int index = 0;
     float elapsedTime = 0.0f;
+
 
 	//Game loop
 	while (!application->GetOgreWrapper().GetWindow()->isClosed())
@@ -265,11 +274,17 @@ void GameWorld::Run()
 		while (timeToUpdate > STEP_LENGTH && numOfUpdates < 60)
 		{
 			timeToUpdate -= STEP_LENGTH;
+			
+			//static_cast<Ogre::Camera*>(cameraNode->getAttachedObject("MainCamera"))->lookAt(heli->getPos());
 			Update(deltaTime_s);
 
-			//static_cast<Ogre::Camera*>(cameraNode->getAttachedObject("MainCamera"))->lookAt(heli->getPos());
-			cameraNode->setPosition(heli->getPos() + Ogre::Vector3(0, 10, -80));
+			application->GetSceneManager()->getSceneNode(heli->getNodeName())->rotate(Util::RotationMatrixXYZ(Ogre::Vector3(0,0,0.01f)));
+
+			static_cast<Ogre::Camera*>(cameraNode->getAttachedObject("MainCamera"))->lookAt(heli->getPos());
+			//cameraNode->setPosition(heli->getPos() + Ogre::Vector3(0, 10, -80));
+
 			
+
 			numOfUpdates++;
 		}
 		

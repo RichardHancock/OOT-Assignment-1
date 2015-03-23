@@ -21,8 +21,8 @@ public:
 
 	void setPos(Ogre::Vector3 newPos);
 
-	void setActor(OgreApplication* app, float angle, float scale,
-		std::string meshFile, std::string textureFile);
+	virtual void setActor(OgreApplication* app, float angle, float scale,
+		std::string meshFile, std::string textureFile, Ogre::SceneNode* parent);
 
 	virtual void update(float dt);
 

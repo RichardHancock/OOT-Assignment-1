@@ -18,6 +18,7 @@
     <ClInclude Include="src\OgreApplication.h" />
     <ClInclude Include="src\OgreWrapper.h" />
     <ClInclude Include="src\GameWorld.h" />
+    <ClInclude Include="src\Rotor.h" />
     <ClInclude Include="src\stdafx.h" />
     <ClInclude Include="src\TerrainManager.h" />
     <ClInclude Include="src\Util.h" />
@@ -31,6 +32,7 @@
     <ClCompile Include="src\OgreApplication.cpp" />
     <ClCompile Include="src\OgreWrapper.cpp" />
     <ClCompile Include="src\GameWorld.cpp" />
+    <ClCompile Include="src\Rotor.cpp" />
     <ClCompile Include="src\stdafx.cpp" />
     <ClCompile Include="src\TerrainManager.cpp" />
     <ClCompile Include="src\Util.cpp" />

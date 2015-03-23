@@ -51,8 +51,8 @@ void Camera::Update(OIS::Keyboard* keyboard, OIS::Mouse* mouse)
 	currentPosition += (up * verticalScale);
 	currentPosition += (right * sideScale);
 
-	this->sceneNode->setPosition(currentPosition);
-	static_pointer_cast<Ogre::Camera>(this->camera)->lookAt(currentPosition + look);
+	//this->sceneNode->setPosition(currentPosition);
+	//static_pointer_cast<Ogre::Camera>(this->camera)->lookAt(currentPosition + look);
 
 	if (mouse->getMouseState().X.abs > mouse->getMouseState().width)
 		return;
@@ -63,6 +63,7 @@ void Camera::Update(OIS::Keyboard* keyboard, OIS::Mouse* mouse)
 	const int mouseX = mouse->getMouseState().X.rel;
 	const int mouseY = mouse->getMouseState().Y.rel;
 
+	/*
 	this->rotation.x += mouseX;
 	this->rotation.y += mouseY;
 
@@ -71,4 +72,6 @@ void Camera::Update(OIS::Keyboard* keyboard, OIS::Mouse* mouse)
 	newRotationY.FromAngleAxis((Ogre::Radian)(this->rotation.y *  0.0017f), Ogre::Vector3::UNIT_X);
 
 	this->sceneNode->setOrientation(newRotationX * newRotationY);
-}
+	*/
+
+	}

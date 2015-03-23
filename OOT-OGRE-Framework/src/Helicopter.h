@@ -6,6 +6,7 @@
 
 #include "EntityWithMotion.h"
 #include "OgreApplication.h"
+#include "Rotor.h"
 
 class Helicopter : public EntityWithMotion
 {
@@ -15,22 +16,14 @@ public:
 
 	virtual ~Helicopter();
 
-	/**
-	@brief Sets the Helicopter's Rotor speed
-	@param float - Speed of the main rotor
-	@param float - Speed of the aft rotor
-	*/
-	void setRotorSpeed(float mainRotorSpeed, float aftRotorSpeed);
+	virtual void setActor(OgreApplication* app, float angle, float scale, 
+		std::string meshFile, std::string textureFile, Ogre::SceneNode* parent);
 
 	virtual void update(float dt);
 
-	void updateRotors(float dt);
 
 private:
 
-	std::shared_ptr<Ogre::SceneNode> mainRotorNode;
-	std::shared_ptr<Ogre::SceneNode> aftRotorNode;
-
-	float mainRotorSpeed;
-	float aftRotorSpeed;
+	std::shared_ptr<Rotor> mainRotor;
+	std::shared_ptr<Rotor> aftRotor;
 };

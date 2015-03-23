@@ -24,7 +24,7 @@ void Entity::setPos(Ogre::Vector3 newPos)
 }
 
 void Entity::setActor(OgreApplication* app, float angle, float scale,
-	std::string meshFile, std::string textureFile)
+					  std::string meshFile, std::string textureFile, Ogre::SceneNode* parent)
 {
 	//Create node name from class name and Unique ID
 	nodeName = classType + to_string(entityID);
@@ -33,12 +33,12 @@ void Entity::setActor(OgreApplication* app, float angle, float scale,
 	generateNextID();
 
 	float angleRadians = angle * Ogre::Math::PI / 180.0f;
-	Ogre::Matrix3 rotateX(Util::RotationMatrixXYZ(Ogre::Vector3(angle, 0, 0)));
+	Ogre::Matrix3 rotateX(Util::RotationMatrixXYZ(Ogre::Vector3(angleRadians, 0, 0)));
 
 	Ogre::Quaternion orientationQ(rotateX);
 
-	auto helicopter = app->GetSceneManager()->createEntity("helicopter.mesh");
-	helicopter->setCastShadows(false);
+	auto mesh = app->GetSceneManager()->createEntity(meshFile);
+	mesh->setCastShadows(false);
 
 	std::string materialName = textureFile.substr(0, textureFile.length() - 4);
 
@@ -54,18 +54,28 @@ void Entity::setActor(OgreApplication* app, float angle, float scale,
 	textureUnit->setTextureName(textureFile, Ogre::TEX_TYPE_2D);
 	textureUnit->setTextureCoordSet(0);
 
-	helicopter->setMaterialName(materialName);
+	mesh->setMaterialName(materialName);
 
-	auto tempNode1 = app->GetSceneManager()->getRootSceneNode()
-		->createChildSceneNode(nodeName);
+	Ogre::SceneNode* tempNode;
 
-	tempNode1->setScale(Ogre::Vector3(scale));
-	tempNode1->setPosition(pos);
-	tempNode1->setOrientation(orientationQ);
-	tempNode1->attachObject(helicopter);
-	tempNode1->showBoundingBox(false);
+	if (parent == nullptr)
+	{
+		tempNode = app->GetSceneManager()->getRootSceneNode()
+			->createChildSceneNode(nodeName);
+	}
+	else
+	{
+		tempNode = parent->createChildSceneNode(nodeName);
+	}
+	
 
-	node.reset(tempNode1);
+	tempNode->setScale(Ogre::Vector3(scale));
+	tempNode->setPosition(pos);
+	tempNode->setOrientation(orientationQ);
+	tempNode->attachObject(mesh);
+	tempNode->showBoundingBox(false);
+
+	node.reset(tempNode);
 
 }
 

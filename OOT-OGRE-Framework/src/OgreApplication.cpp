@@ -75,7 +75,7 @@ bool OgreApplication::Initialize()
 }
 
 //Create a camera and attach it to a scene node
-shared_ptr<Ogre::SceneNode>  OgreApplication::CreateCamera(Ogre::String  name)
+shared_ptr<Ogre::SceneNode>  OgreApplication::CreateCamera(Ogre::String  name, Ogre::SceneNode* focusPoint)
 {
 
 	// Create a camera using SceneManager. 
@@ -84,7 +84,7 @@ shared_ptr<Ogre::SceneNode>  OgreApplication::CreateCamera(Ogre::String  name)
 	// Create a child scene node of the RootSceneNode,
 	// Attach the camera to the child SceneNode. It will be easier then to move it in the scene.
 	shared_ptr<Ogre::SceneNode> cameraNode;
-	cameraNode.reset(rootSceneNode ->createChildSceneNode(name.append("Node")));
+	cameraNode.reset(focusPoint ->createChildSceneNode(name.append("Node")));
 	cameraNode->attachObject(camera);
 
 	// Setup viewport parameters 

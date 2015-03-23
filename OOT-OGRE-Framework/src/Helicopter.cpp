@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "Helicopter.h"
 
-#include <math.h>
-
 #include "Util.h"
 
 Helicopter::Helicopter(Ogre::Vector3 pos) 
@@ -13,10 +11,24 @@ Helicopter::Helicopter(Ogre::Vector3 pos)
 
 Helicopter::~Helicopter() { }
 
-void Helicopter::setRotorSpeed(float mainRotorSpeed, float aftRotorSpeed)
+void Helicopter::setActor(OgreApplication* app, float angle, float scale, 
+	std::string meshFile, std::string textureFile, Ogre::SceneNode* parent)
 {
-	this->mainRotorSpeed = mainRotorSpeed;
-	this->aftRotorSpeed = aftRotorSpeed;
+	Entity::setActor(app, angle, scale, meshFile, textureFile, parent);
+
+	Rotor* tempMainRotor = new Rotor(Ogre::Vector3(0.0f, 0.0f, -0.045f), 
+		720, Ogre::Vector3(0,0,1));
+
+	tempMainRotor->setActor(app,0,1,"topRotor.mesh", "green.png", node.get());
+
+	mainRotor.reset(tempMainRotor);
+
+	Rotor* tempAftRotor = new Rotor(Ogre::Vector3(-0.015f, -0.11f, -0.004f), 
+		720, Ogre::Vector3(1,0,0));
+
+	tempAftRotor->setActor(app,0,1,"aftRotor.mesh", "green.png", node.get());
+	
+	aftRotor.reset(tempAftRotor);
 }
 
 void Helicopter::update(float dt)
@@ -24,16 +36,14 @@ void Helicopter::update(float dt)
 	Util::applyDrag(vel, 0.40f);
 	pos += vel * dt;
 	
+
 	Entity::update(dt);
 
-	updateRotors(dt);
-}
+	mainRotor->setSpeedPercent(100);
+	aftRotor->setSpeedPercent(100);
 
-void Helicopter::updateRotors(float dt)
-{
-	float angle = mainRotorSpeed * Ogre::Math::PI / 180.0f * dt;
-	mainRotorNode->rotate(Ogre::Quaternion(Util::RotationMatrixXYZ(Ogre::Vector3(0, 0, angle))), Ogre::Node::TS_LOCAL);
+	mainRotor->update(dt);
+	aftRotor->update(dt);
 	
-	angle = aftRotorSpeed * Ogre::Math::PI / 180.0f * dt;
-	aftRotorNode->rotate(Ogre::Quaternion(Util::RotationMatrixXYZ(Ogre::Vector3(angle, 0, 0))), Ogre::Node::TS_LOCAL);
+	
 }

@@ -50,7 +50,7 @@ public:
 	bool Initialize();
 	void CleanUp();
 											
-	std::shared_ptr<Ogre::SceneNode> CreateCamera(Ogre::String  name);	
+	std::shared_ptr<Ogre::SceneNode> CreateCamera(Ogre::String  name, Ogre::SceneNode* focusPoint);	
 	std::shared_ptr<Ogre::SceneNode> CreateEntityFromMesh(std::string mesh, std::string name);
  
 	void SetEntityColour(Ogre::String      materialName,
