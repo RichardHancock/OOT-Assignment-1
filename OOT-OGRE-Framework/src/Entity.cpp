@@ -5,18 +5,12 @@
 
 #include "Util.h"
 
-std::string Entity::classType = "Entity";
-
 unsigned int Entity::entityID = 0;
 
 Entity::Entity(Ogre::Vector3 pos)
 	: pos(pos)
 {
-	//Create node name from class name and Unique ID
-	nodeName = classType + to_string(entityID);
-
-	//Now this ID has been used, generate a new one
-	generateNextID();
+	classType = "Entity";
 }
 
 Entity::~Entity() 
@@ -32,6 +26,12 @@ void Entity::setPos(Ogre::Vector3 newPos)
 void Entity::setActor(OgreApplication* app, float angle, float scale,
 	std::string meshFile, std::string textureFile)
 {
+	//Create node name from class name and Unique ID
+	nodeName = classType + to_string(entityID);
+
+	//Now this ID has been used, generate a new one
+	generateNextID();
+
 	float angleRadians = angle * Ogre::Math::PI / 180.0f;
 	Ogre::Matrix3 rotateX(Util::RotationMatrixXYZ(Ogre::Vector3(angle, 0, 0)));
 

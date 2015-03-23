@@ -4,23 +4,16 @@
 
 #include <memory>
 
+#include "EntityWithMotion.h"
 #include "OgreApplication.h"
 
-class Helicopter
+class Helicopter : public EntityWithMotion
 {
 public:
 
 	Helicopter(Ogre::Vector3 pos);
 
-	~Helicopter();
-
-	Ogre::Vector3 getPos() { return pos; }
-
-	void setPos(Ogre::Vector3 newPos);
-
-	void setVelocity(Ogre::Vector3 newVel);
-
-	void increaseVelocity(Ogre::Vector3 increase);
+	virtual ~Helicopter();
 
 	/**
 	@brief Sets the Helicopter's Rotor speed
@@ -29,24 +22,14 @@ public:
 	*/
 	void setRotorSpeed(float mainRotorSpeed, float aftRotorSpeed);
 
-	void setActor(OgreApplication* app);
-
-	void update(float dt);
+	virtual void update(float dt);
 
 	void updateRotors(float dt);
 
-	std::string getNodeName() { return nodeName; }
 private:
 
-	std::shared_ptr<Ogre::SceneNode> heliNode;
 	std::shared_ptr<Ogre::SceneNode> mainRotorNode;
 	std::shared_ptr<Ogre::SceneNode> aftRotorNode;
-
-	std::string nodeName;
-
-	Ogre::Vector3 pos;
-
-	Ogre::Vector3 vel;
 
 	float mainRotorSpeed;
 	float aftRotorSpeed;

@@ -29,8 +29,8 @@ public:
 	std::string getNodeName() { return nodeName; }
 
 protected:
-
-	static std::string classType;
+	///Name of the class for use as its scene node name
+	std::string classType;
 
 	///Entity's Scene Node
 	std::shared_ptr<Ogre::SceneNode> node;

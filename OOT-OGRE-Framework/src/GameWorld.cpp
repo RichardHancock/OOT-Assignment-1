@@ -58,8 +58,7 @@ void GameWorld::CreateEntities()
 	application->SetEntityColour("GREEN", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::ColourValue(0.1f, 0.8f, 0.1f), Ogre::ColourValue(0.0f, 0.6f, 0.0f), 50.0f);
 
 	heli = new Helicopter(Ogre::Vector3(0,300,0));
-	heli->setActor(application);
-	//heli->setPos(Ogre::Vector3(0,300,0));
+	heli->setActor(application, 90.0f, 200.0f, "helicopter.mesh", "green.png");
 	heli->setRotorSpeed(720, 720);
 }
 

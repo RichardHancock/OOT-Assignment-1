@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Entity.h" />
+    <ClInclude Include="src\EntityWithMotion.h" />
     <ClInclude Include="src\Helicopter.h" />
     <ClInclude Include="src\OgreApplication.h" />
     <ClInclude Include="src\OgreWrapper.h" />
@@ -24,6 +25,7 @@
   <ItemGroup>
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\Entity.cpp" />
+    <ClCompile Include="src\EntityWithMotion.cpp" />
     <ClCompile Include="src\Helicopter.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\OgreApplication.cpp" />
