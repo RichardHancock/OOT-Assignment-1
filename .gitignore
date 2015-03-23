@@ -1,0 +1,9 @@
+media
+*.user
+ipch
+*.sdf
+*.suo
+obj
+*.exe
+*.pdb
+*.log
