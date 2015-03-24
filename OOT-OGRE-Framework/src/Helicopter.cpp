@@ -35,7 +35,10 @@ void Helicopter::setActor(OgreApplication* app, float angle, float scale,
 void Helicopter::update(float dt)
 {
 	Util::applyDrag(vel, 0.50f);
-	pos += vel * dt;
+	//pos += vel * dt;
+	node->translate(vel * dt, Ogre::Node::TS_LOCAL);
+
+	pos = node->getPosition();
 
 	if (rotationSpeed != 0.00f)
 	{
@@ -49,7 +52,8 @@ void Helicopter::update(float dt)
 	}
 
 
-	Entity::update(dt);
+	
+	//Entity::update(dt);
 
 	mainRotor->setSpeedPercent(100);
 	aftRotor->setSpeedPercent(100);

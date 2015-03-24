@@ -223,11 +223,11 @@ void GameWorld::Run()
 
 		if (keyboard->isKeyDown(OIS::KC_W))
 		{
-			heli->increaseVelocity(Ogre::Vector3(0,0,1.0f));
+			heli->increaseVelocity(Ogre::Vector3(0, 1.0f, 0));
 		}
 		else if (keyboard->isKeyDown(OIS::KC_S))
 		{
-			heli->increaseVelocity(Ogre::Vector3(0,0,-1.0f));
+			heli->increaseVelocity(Ogre::Vector3(0, -1.0f, 0));
 		}
 		
 		if (keyboard->isKeyDown(OIS::KC_A))
@@ -241,11 +241,11 @@ void GameWorld::Run()
 
 		if (keyboard->isKeyDown(OIS::KC_LSHIFT))
 		{
-			heli->increaseVelocity(Ogre::Vector3(0, 1.0f, 0));
+			heli->increaseVelocity(Ogre::Vector3(0, 0, -1.0f));
 		}
 		else if (keyboard->isModifierDown(OIS::Keyboard::Alt))
 		{
-			heli->increaseVelocity(Ogre::Vector3(0, -1.0f, 0));
+			heli->increaseVelocity(Ogre::Vector3(0, 0, 1.0f));
 		}
 
 		if (keyboard->isKeyDown(OIS::KC_Q))
