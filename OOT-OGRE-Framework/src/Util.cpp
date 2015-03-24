@@ -84,6 +84,7 @@ namespace Util
 
 	void applyDrag(float& value, float dragAmount)
 	{
+
 		if (value == 0.00f)
 		{
 			//Value already 0 no drag can be applied
@@ -92,13 +93,14 @@ namespace Util
 
 		if (value < 0.00f)
 		{
+			//Something HERE WRONG
 			if (value < -dragAmount)
 			{
 				value += dragAmount;
 			}
 			else
 			{
-				value += value;
+				value = 0;
 			}
 		}
 		else
@@ -109,7 +111,7 @@ namespace Util
 			}
 			else
 			{
-				value -= value;
+				value = 0;
 			}
 		}
 

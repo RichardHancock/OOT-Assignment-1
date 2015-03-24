@@ -21,9 +21,12 @@ public:
 
 	virtual void update(float dt);
 
+	void increaseRotatationSpeed(float speed);
 
 private:
 
 	std::shared_ptr<Rotor> mainRotor;
 	std::shared_ptr<Rotor> aftRotor;
+
+	float rotationSpeed;
 };

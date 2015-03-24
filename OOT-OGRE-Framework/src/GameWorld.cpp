@@ -248,6 +248,16 @@ void GameWorld::Run()
 			heli->increaseVelocity(Ogre::Vector3(0, -1.0f, 0));
 		}
 
+		if (keyboard->isKeyDown(OIS::KC_Q))
+		{
+			heli->increaseRotatationSpeed(-0.25f);
+		}
+		else if (keyboard->isKeyDown(OIS::KC_E))
+		{
+			heli->increaseRotatationSpeed(0.25f);
+		}
+
+
 		frameEvent.timeSinceLastFrame = deltaTime;
 		trayManager->frameRenderingQueued(frameEvent);
 
@@ -278,7 +288,7 @@ void GameWorld::Run()
 			//static_cast<Ogre::Camera*>(cameraNode->getAttachedObject("MainCamera"))->lookAt(heli->getPos());
 			Update(deltaTime_s);
 
-			application->GetSceneManager()->getSceneNode(heli->getNodeName())->rotate(Util::RotationMatrixXYZ(Ogre::Vector3(0,0,0.01f)));
+			//application->GetSceneManager()->getSceneNode(heli->getNodeName())->rotate(Util::RotationMatrixXYZ(Ogre::Vector3(0,0,0.01f)));
 
 			static_cast<Ogre::Camera*>(cameraNode->getAttachedObject("MainCamera"))->lookAt(heli->getPos());
 			//cameraNode->setPosition(heli->getPos() + Ogre::Vector3(0, 10, -80));

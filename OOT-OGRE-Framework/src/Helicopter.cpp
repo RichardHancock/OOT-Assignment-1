@@ -7,6 +7,7 @@ Helicopter::Helicopter(Ogre::Vector3 pos)
 	: EntityWithMotion(pos)
 {
 	classType = "Helicopter";
+	rotationSpeed = 0.0f;
 }
 
 Helicopter::~Helicopter() { }
@@ -33,9 +34,20 @@ void Helicopter::setActor(OgreApplication* app, float angle, float scale,
 
 void Helicopter::update(float dt)
 {
-	Util::applyDrag(vel, 0.40f);
+	Util::applyDrag(vel, 0.50f);
 	pos += vel * dt;
-	
+
+	if (rotationSpeed != 0.00f)
+	{
+		std::cout << "Before: " << rotationSpeed;
+		Util::applyDrag(rotationSpeed, 0.40f);
+		std::cout << ", After: " << rotationSpeed << std::endl;
+		//Ogre::Vector3 rotation(0.0f, 0.0f, rotationSpeed * dt);
+		node->roll(Ogre::Radian(rotationSpeed * dt));
+		//node->rotate(Util::rotate_z(rotationSpeed * dt));
+		//rotationSpeed = 0;
+	}
+
 
 	Entity::update(dt);
 
@@ -46,4 +58,9 @@ void Helicopter::update(float dt)
 	aftRotor->update(dt);
 	
 	
+}
+
+void Helicopter::increaseRotatationSpeed(float speed)
+{
+	rotationSpeed += speed;
 }
