@@ -50,6 +50,7 @@ void GameWorld::CreateGUI()
 
 	Ogre::StringVector parameters;
 	parameters.push_back("Helicopter Position");
+	parameters.push_back("Current Reload Time");
 	paramPanel = trayManager->createParamsPanel(OgreBites::TL_TOPLEFT,"Parameter Panel", 350, parameters);
 }
 
@@ -247,6 +248,9 @@ void GameWorld::Run()
 		sprintf_s(buffer, 256, "%4.2f %4.2f %4.2f", vValue.x, vValue.y, vValue.z);
 		paramPanel->setParamValue(0, buffer);
 
+		sprintf_s(buffer, 256, "%4.2f seconds", cannon->getRemainingReloadTime());
+		paramPanel->setParamValue(1, buffer);
+
 
 		const OIS::MouseState& mouseState = mouse->getMouseState();
 
@@ -302,9 +306,20 @@ void GameWorld::UpdateGame(float dt)
 	cannon->update(dt);
 	cannon->aim(heli->getPos());
 
-	for (auto bullet : bullets)
+	for (unsigned int i = 0; i < bullets.size();)
 	{
+		auto bullet = bullets[i];
+
 		bullet->update(dt);
+
+		if (bullet->expired())
+		{
+			bullets.erase(bullets.begin() + i);
+		}
+		else
+		{
+			i++;
+		}
 	}
 		
 }

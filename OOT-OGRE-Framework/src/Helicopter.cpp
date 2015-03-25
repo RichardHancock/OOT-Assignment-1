@@ -39,7 +39,7 @@ void Helicopter::setActor(OgreApplication* app, float angle, float scale,
 
 void Helicopter::update(float dt)
 {
-	Util::applyDrag(vel, 0.50f);
+	Util::applyDrag(vel, 0.70f);
 	
 	node->translate(vel * dt, Ogre::Node::TS_LOCAL);
 
@@ -51,7 +51,8 @@ void Helicopter::update(float dt)
 		node->roll(Ogre::Radian(rotationSpeed * dt));
 	}
 
-	calculateRotorSpeeds();
+	calculateRotorSpeed(mainRotor.get(), vel.z, maxSpeed);
+	calculateRotorSpeed(aftRotor.get(), rotationSpeed, maxRotationSpeed);
 
 	mainRotor->update(dt);
 	aftRotor->update(dt);
@@ -110,37 +111,32 @@ void Helicopter::handleInput(OIS::Keyboard* keyboard)
 	}
 }
 
-void Helicopter::calculateRotorSpeeds()
+void Helicopter::calculateRotorSpeed(Rotor* rotor, float speed, float maximumSpeed)
 {
+	/*
+		This calculates the rotation speed of the rotors. The main rotor is affected by
+		up and down velocity, while the aft rotor is affected by rotations.
+		The rotors will always been spinning a reasonable amount (30%) for realism.
+		This means the scale is between 0-70%, 35% being the idle state (no velocity just 
+		hovering). Once this percentage has been calculated the minimum rotor rotation speed 
+		is added to it, which gives the final speed percentage for the rotor.
+		The rotor then internally uses this percentage to determines its spin speed.
+	*/
+
 	//The minimum rotation speed of the rotors
 	const float minRotorPercent = 30.0f;
 
 	//Shift the scale to be on positive scale
-	float mainRotorOffset = (vel.z + maxSpeed);
+	float rotorSpeedOffset = (speed + maximumSpeed);
 	
 	//As scale has been offset, the max needs to be doubled 
-	float maxSpeedOffset = maxSpeed * 2;
+	float maxSpeedOffset = maximumSpeed * 2;
 
 	//get a percentage between 0%-70%
-	float rotorSpeed = mainRotorOffset / maxSpeedOffset * 70;
+	float rotorSpeed = rotorSpeedOffset / maxSpeedOffset * 70;
 
 	/*	Flip the percentage to the opposite and send it to the rotor
 	This is done to make the animation run the correct way round
 	It also adds the 30% minimum speed */
-	mainRotor->setSpeedPercent((70 - rotorSpeed) + minRotorPercent);
-
-
-	//Shift the scale to be on positive scale
-	float aftRotorOffset = (rotationSpeed + maxRotationSpeed);
-
-	//As scale has been offset, the max needs to be doubled 
-	float maxRotSpeedOffset = maxRotationSpeed * 2;
-
-	//get a percentage between 0%-70%
-	rotorSpeed = aftRotorOffset / maxRotSpeedOffset * 70;
-
-	/*	Flip the percentage to the opposite and send it to the rotor
-		This is done to make the animation run the correct way round
-		It also adds the 30% minimum speed */
-	aftRotor->setSpeedPercent((70 - rotorSpeed) + minRotorPercent);
+	rotor->setSpeedPercent((70 - rotorSpeed) + minRotorPercent);
 }

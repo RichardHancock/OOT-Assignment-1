@@ -26,7 +26,7 @@ public:
 	void handleInput(OIS::Keyboard* keyboard);
 private:
 
-	void calculateRotorSpeeds();
+	void calculateRotorSpeed(Rotor* rotor, float speed, float maximumSpeed);
 
 	std::shared_ptr<Rotor> mainRotor;
 	std::shared_ptr<Rotor> aftRotor;

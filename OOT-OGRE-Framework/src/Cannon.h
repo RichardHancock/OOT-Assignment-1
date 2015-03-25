@@ -18,6 +18,8 @@ public:
 
 	shared_ptr<Projectile> fire();
 
+	float getRemainingReloadTime() { return reloadDelay.getTimeRemaining(); };
+
 protected:
 
 	Ogre::Vector3 targetPrevPos;

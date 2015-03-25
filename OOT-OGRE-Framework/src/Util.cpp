@@ -145,7 +145,19 @@ namespace Util
 		//Set the current to be past the duration so the timer is stopped
 		current = 11.0f;
 	}
-	
+
+	float Timer::getTimeRemaining()
+	{
+		if (hasTimerFinished())
+		{
+			//Stops negative numbers being returned
+			return 0.00f;
+		}
+		else
+		{
+			return duration - current;
+		}
+	}
 
 	void Timer::reset()
 	{

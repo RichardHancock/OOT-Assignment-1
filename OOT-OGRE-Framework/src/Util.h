@@ -25,6 +25,8 @@ namespace Util
 	public:
 		Timer();
 
+		float getTimeRemaining();
+
 		void reset();
 
 		void reset(float newDuration);
