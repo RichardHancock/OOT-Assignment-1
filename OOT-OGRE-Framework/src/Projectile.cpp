@@ -2,7 +2,7 @@
 #include "Projectile.h"
 
 Projectile::Projectile(Ogre::Vector3 pos)
-	: EntityWithMotion(pos)
+	: EntityWithMotion(pos, 200.0f)
 {
 	classType = "Projectile";
 

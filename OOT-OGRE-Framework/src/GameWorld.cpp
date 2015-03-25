@@ -60,7 +60,7 @@ void GameWorld::CreateEntities()
 	application->SetEntityColour("RED", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::ColourValue(1.0f, 0.1f, 0.1f), Ogre::ColourValue(0.6f, 0.0f, 0.0f), 100.0f);
 	application->SetEntityColour("GREEN", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::ColourValue(0.1f, 0.8f, 0.1f), Ogre::ColourValue(0.0f, 0.6f, 0.0f), 50.0f);
 
-	heli.reset(new Helicopter(Ogre::Vector3(0,300,0)));
+	heli.reset(new Helicopter(Ogre::Vector3(0,300,0), 100.0f));
 	heli->setActor(application, 90.0f, 200.0f, "helicopter.mesh", "green.png", nullptr);
 
 	cannon.reset(new Cannon(Ogre::Vector3(100,270,227)));
@@ -197,6 +197,8 @@ void GameWorld::Run()
 		mouse->capture();
 		camera->Update(keyboard.get(), mouse.get());
 
+		heli->handleInput(keyboard.get());
+
 		float coeff = 200.0f * deltaTime_s;
 		Ogre::Vector3 translation(Ogre::Vector3::ZERO);
 
@@ -234,44 +236,6 @@ void GameWorld::Run()
 				bullets.push_back(newBullet);
 			}
 		}
-		
-
-		if (keyboard->isKeyDown(OIS::KC_W))
-		{
-			heli->increaseVelocity(Ogre::Vector3(0, 1.0f, 0));
-		}
-		else if (keyboard->isKeyDown(OIS::KC_S))
-		{
-			heli->increaseVelocity(Ogre::Vector3(0, -1.0f, 0));
-		}
-		
-		if (keyboard->isKeyDown(OIS::KC_A))
-		{
-			heli->increaseVelocity(Ogre::Vector3(1.0f, 0, 0));
-		}
-		else if (keyboard->isKeyDown(OIS::KC_D))
-		{
-			heli->increaseVelocity(Ogre::Vector3(-1.0f, 0, 0));
-		}
-
-		if (keyboard->isKeyDown(OIS::KC_LSHIFT))
-		{
-			heli->increaseVelocity(Ogre::Vector3(0, 0, -1.0f));
-		}
-		else if (keyboard->isModifierDown(OIS::Keyboard::Alt))
-		{
-			heli->increaseVelocity(Ogre::Vector3(0, 0, 1.0f));
-		}
-
-		if (keyboard->isKeyDown(OIS::KC_Q))
-		{
-			heli->increaseRotatationSpeed(-0.25f);
-		}
-		else if (keyboard->isKeyDown(OIS::KC_E))
-		{
-			heli->increaseRotatationSpeed(0.25f);
-		}
-
 
 		frameEvent.timeSinceLastFrame = deltaTime;
 		trayManager->frameRenderingQueued(frameEvent);

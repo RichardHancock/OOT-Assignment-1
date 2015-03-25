@@ -12,7 +12,7 @@ class Helicopter : public EntityWithMotion
 {
 public:
 
-	Helicopter(Ogre::Vector3 pos);
+	Helicopter(Ogre::Vector3 pos, float maxSpeed);
 
 	virtual ~Helicopter();
 
@@ -22,11 +22,16 @@ public:
 	virtual void update(float dt);
 
 	void increaseRotatationSpeed(float speed);
-
+	
+	void handleInput(OIS::Keyboard* keyboard);
 private:
+
+	void calculateRotorSpeeds();
 
 	std::shared_ptr<Rotor> mainRotor;
 	std::shared_ptr<Rotor> aftRotor;
+
+	const float maxRotationSpeed;
 
 	float rotationSpeed;
 };

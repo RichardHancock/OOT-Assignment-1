@@ -117,6 +117,26 @@ namespace Util
 
 	}
 
+	void keepInBounds(Ogre::Vector3& value, float limit)
+	{
+		keepInBounds(value.x, limit);
+		keepInBounds(value.y, limit);
+		keepInBounds(value.z, limit);
+	}
+
+	void keepInBounds(float& value, float limit)
+	{
+		if (value < -limit)
+		{
+			value = -limit;
+		}
+		else if (value > limit)
+		{
+			value = limit;
+		}
+	}
+
+
 	//Timer
 	Timer::Timer()
 	{

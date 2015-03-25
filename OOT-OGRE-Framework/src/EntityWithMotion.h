@@ -10,7 +10,7 @@
 class EntityWithMotion : public Entity
 {
 public:
-	EntityWithMotion(Ogre::Vector3 pos);
+	EntityWithMotion(Ogre::Vector3 pos, float maxSpeed);
 
 	virtual ~EntityWithMotion();
 
@@ -21,4 +21,7 @@ public:
 protected:
 
 	Ogre::Vector3 vel;
+
+	///Maximum speed of the entity
+	const float maxSpeed;
 };

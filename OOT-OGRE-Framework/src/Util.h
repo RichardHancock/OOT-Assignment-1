@@ -16,6 +16,9 @@ namespace Util
 
 	void applyDrag(float& value, float dragAmount);
 
+	void keepInBounds(Ogre::Vector3& value, float limit);
+
+	void keepInBounds(float& value, float limit);
 
 	class Timer
 	{
