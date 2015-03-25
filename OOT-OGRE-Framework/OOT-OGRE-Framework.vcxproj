@@ -12,12 +12,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Camera.h" />
+    <ClInclude Include="src\Cannon.h" />
     <ClInclude Include="src\Entity.h" />
     <ClInclude Include="src\EntityWithMotion.h" />
     <ClInclude Include="src\Helicopter.h" />
     <ClInclude Include="src\OgreApplication.h" />
     <ClInclude Include="src\OgreWrapper.h" />
     <ClInclude Include="src\GameWorld.h" />
+    <ClInclude Include="src\Projectile.h" />
     <ClInclude Include="src\Rotor.h" />
     <ClInclude Include="src\stdafx.h" />
     <ClInclude Include="src\TerrainManager.h" />
@@ -25,6 +27,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\Cannon.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\EntityWithMotion.cpp" />
     <ClCompile Include="src\Helicopter.cpp" />
@@ -32,6 +35,7 @@
     <ClCompile Include="src\OgreApplication.cpp" />
     <ClCompile Include="src\OgreWrapper.cpp" />
     <ClCompile Include="src\GameWorld.cpp" />
+    <ClCompile Include="src\Projectile.cpp" />
     <ClCompile Include="src\Rotor.cpp" />
     <ClCompile Include="src\stdafx.cpp" />
     <ClCompile Include="src\TerrainManager.cpp" />
