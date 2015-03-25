@@ -81,7 +81,10 @@ void Entity::setActor(OgreApplication* app, float angle, float scale,
 
 void Entity::update(float dt)
 {
-	node->setPosition(pos);
+	if (node != nullptr)
+	{
+		node->setPosition(pos);
+	}
 }
 
 void Entity::generateNextID()

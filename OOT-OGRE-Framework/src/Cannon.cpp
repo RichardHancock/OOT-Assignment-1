@@ -4,6 +4,9 @@
 Cannon::Cannon(Ogre::Vector3 pos)
 	: Entity(pos)
 {
+	classType = "Cannon";
+	
+	direction = 0;
 	firstRun = true;
 	targetPrevPos = 0.0f;
 }
@@ -15,21 +18,22 @@ Cannon::~Cannon()
 
 void Cannon::update(float dt)
 {
-
+	reloadDelay.update(dt);
+	Entity::update(dt);
 }
 
 void Cannon::aim(Ogre::Vector3 targetPos)
 {
 	if (firstRun)
 	{
-		targetPrevPos = targetPos;
+		targetPrevPos = 0;
 		firstRun = false;
 	}
 
-	Ogre::Vector3 v1 = (pos - targetPrevPos).normalisedCopy();
-	Ogre::Vector3 v2 = (pos - targetPos).normalisedCopy();
+	Ogre::Vector3 v1 = (targetPrevPos - pos).normalisedCopy();
+	Ogre::Vector3 v2 = (targetPos - pos).normalisedCopy();
 
-	Ogre::Vector3 v3 = v1.crossProduct(v2);
+	Ogre::Vector3 v3 = (v1.crossProduct(v2)).normalisedCopy();
 
 	Ogre::Radian angle = Ogre::Math::ACos(v1.dotProduct(v2));
 
@@ -42,16 +46,32 @@ void Cannon::aim(Ogre::Vector3 targetPos)
 
 	direction = v2;
 
-	node->setOrientation(quat);
+	//node->setOrientation(quat);
+	node->rotate(quat,Ogre::Node::TS_LOCAL);
+	
 	targetPrevPos = targetPos;
 }
 
-Projectile Cannon::fire()
+shared_ptr<Projectile> Cannon::fire()
 {
-	Projectile proj(pos);
+	if (reloadDelay.hasTimerFinished())
+	{
+		shared_ptr<Projectile> proj;
 
-	proj.fire(direction * 10, 1.0f);
+		proj = make_shared<Projectile>(pos);
 
-	return proj;
+		//Gravity offset to stop the projectile falling short
+		direction.y += 0.13f;
 
+		proj->fire(direction * 100, 10.0f);
+
+		//Reset 7 sec delay
+		reloadDelay.reset(7.0f);
+
+		return proj;
+	}
+	else
+	{
+		return nullptr;
+	}
 }

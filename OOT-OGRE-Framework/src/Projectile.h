@@ -13,7 +13,7 @@ public:
 
 	virtual void update(float dt);
 
-	void fire(Ogre::Vector3 initVel, float gravity);
+	void fire(Ogre::Vector3 fireVelocity, float gravity);
 
 private:
 	

@@ -15,4 +15,24 @@ namespace Util
 	void applyDrag(Ogre::Vector3& value, float dragAmount);
 
 	void applyDrag(float& value, float dragAmount);
+
+
+	class Timer
+	{
+	public:
+		Timer();
+
+		void reset();
+
+		void reset(float newDuration);
+
+		void update(float dt);
+
+		bool hasTimerFinished() { return (current >= duration); }
+
+	private:
+		float current;
+
+		float duration;
+	};
 }

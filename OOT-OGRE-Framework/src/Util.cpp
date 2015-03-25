@@ -116,4 +116,35 @@ namespace Util
 		}
 
 	}
+
+	//Timer
+	Timer::Timer()
+	{
+		duration = 10.0f;
+		
+		//Set the current to be past the duration so the timer is stopped
+		current = 11.0f;
+	}
+	
+
+	void Timer::reset()
+	{
+		current = 0.0f;
+	}
+
+	void Timer::reset(float newDuration)
+	{
+		current = 0.0f;
+		duration = newDuration;
+	}
+
+	void Timer::update(float dt)
+	{
+		if (!hasTimerFinished())
+		{
+			current += dt;
+		}
+	}
+
+
 }

@@ -15,6 +15,8 @@
 #include "OgreApplication.h"
 
 #include "Helicopter.h"
+#include "Cannon.h"
+
 #include "TerrainManager.h"
 
 class GameWorld : public OgreBites::SdkTrayListener
@@ -26,7 +28,10 @@ private:
 	
 	void CreateGUI();
 
-	Helicopter* heli;
+	shared_ptr<Helicopter> heli;
+	shared_ptr<Cannon> cannon;
+	std::vector<shared_ptr<Projectile>> bullets;
+
 
 	//GUI
 	shared_ptr<OgreBites::SdkTrayManager> trayManager;

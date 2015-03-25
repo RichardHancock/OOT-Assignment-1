@@ -3,6 +3,7 @@
 #include "stdafx.h"
 #include "Entity.h"
 #include "Projectile.h"
+#include "Util.h"
 
 class Cannon : public Entity
 {
@@ -15,7 +16,7 @@ public:
 
 	void aim(Ogre::Vector3 targetPos);
 
-	Projectile fire();
+	shared_ptr<Projectile> fire();
 
 protected:
 
@@ -24,4 +25,6 @@ protected:
 	bool firstRun;
 
 	Ogre::Vector3 direction;
+
+	Util::Timer reloadDelay;
 };

@@ -44,12 +44,12 @@ void GameWorld::CreateGUI()
 	trayManager = make_shared<OgreBites::SdkTrayManager>("GUI", application->GetRenderWindow()
 		,inputContext, this);
 
+	trayManager->showFrameStats(OgreBites::TL_BOTTOMRIGHT);
 	trayManager->showLogo(OgreBites::TL_BOTTOMRIGHT);
 	trayManager->hideCursor();
 
 	Ogre::StringVector parameters;
 	parameters.push_back("Helicopter Position");
-	parameters.push_back("Helicopter Orientation");
 	paramPanel = trayManager->createParamsPanel(OgreBites::TL_TOPLEFT,"Parameter Panel", 350, parameters);
 }
 
@@ -60,8 +60,11 @@ void GameWorld::CreateEntities()
 	application->SetEntityColour("RED", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::ColourValue(1.0f, 0.1f, 0.1f), Ogre::ColourValue(0.6f, 0.0f, 0.0f), 100.0f);
 	application->SetEntityColour("GREEN", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::ColourValue(0.1f, 0.8f, 0.1f), Ogre::ColourValue(0.0f, 0.6f, 0.0f), 50.0f);
 
-	heli = new Helicopter(Ogre::Vector3(0,300,0));
+	heli.reset(new Helicopter(Ogre::Vector3(0,300,0)));
 	heli->setActor(application, 90.0f, 200.0f, "helicopter.mesh", "green.png", nullptr);
+
+	cannon.reset(new Cannon(Ogre::Vector3(100,270,227)));
+	cannon->setActor(application, 0.0f, 0.2f, "cube.mesh", "green.png", nullptr);
 }
 
 // Create a ogre world environment with a predefined geometry and a texture
@@ -220,6 +223,18 @@ void GameWorld::Run()
 			Reset();
 		}
 
+		if (keyboard->isKeyDown(OIS::KC_T))
+		{
+			//Fire a bullet and push it into the array of bullets
+			shared_ptr<Projectile> newBullet = cannon->fire();
+			
+			if (newBullet != nullptr)
+			{
+				newBullet->setActor(application,0.0f, 0.03f, "sphere.mesh", "green.png", nullptr);
+				bullets.push_back(newBullet);
+			}
+		}
+		
 
 		if (keyboard->isKeyDown(OIS::KC_W))
 		{
@@ -319,6 +334,14 @@ void GameWorld::UpdateGame(float dt)
 {
 	// Implement ...... 
 	heli->update(dt);
+	
+	cannon->update(dt);
+	cannon->aim(heli->getPos());
+
+	for (auto bullet : bullets)
+	{
+		bullet->update(dt);
+	}
 		
 }
 
