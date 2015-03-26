@@ -26,16 +26,16 @@ void Cannon::aim(Ogre::Vector3 targetPos)
 {
 	if (firstRun)
 	{
-		targetPrevPos = 0;
+		targetPrevPos = Ogre::Vector3(1,1,1);
 		firstRun = false;
 	}
 
 	Ogre::Vector3 v1 = (targetPrevPos - pos).normalisedCopy();
 	Ogre::Vector3 v2 = (targetPos - pos).normalisedCopy();
 
-	Ogre::Vector3 v3 = (v1.crossProduct(v2)).normalisedCopy();
+	Ogre::Vector3 v3 = (v2.crossProduct(v1)).normalisedCopy();
 
-	Ogre::Radian angle = Ogre::Math::ACos(v1.dotProduct(v2));
+	Ogre::Radian angle = -Ogre::Math::ACos(v1.dotProduct(v2));
 
 	Ogre::Quaternion quat = Ogre::Quaternion(
 		Ogre::Math::Cos(0.5 * angle),
@@ -47,7 +47,7 @@ void Cannon::aim(Ogre::Vector3 targetPos)
 	direction = v2;
 
 	//node->setOrientation(quat);
-	node->rotate(quat,Ogre::Node::TS_LOCAL);
+	node->rotate(quat,Ogre::Node::TS_WORLD);
 	
 	targetPrevPos = targetPos;
 }
@@ -63,7 +63,7 @@ shared_ptr<Projectile> Cannon::fire()
 		//Gravity offset to stop the projectile falling short
 		direction.y += 0.11f;
 
-		proj->fire(direction * 100, 10.0f);
+		proj->fire(direction * 250, 60.0f);
 
 		//Reset 4 sec delay
 		reloadDelay.reset(4.0f);

@@ -31,7 +31,6 @@ GameWorld::~GameWorld()
 void GameWorld::InitilaiseScene()
 {
 	CreateEnviroment();
-	//CreateLights();
 	CreateEntities();
 	CreateGUI();
 }
@@ -64,8 +63,18 @@ void GameWorld::CreateEntities()
 	heli.reset(new Helicopter(Ogre::Vector3(0,300,0), 100.0f));
 	heli->setActor(application, Ogre::Vector3(90.0f, 0.0f, 0.0f), 200.0f, "helicopter.mesh", "green.png", nullptr);
 
-	cannon.reset(new Cannon(Ogre::Vector3(100,270,227)));
-	cannon->setActor(application, Ogre::Vector3(0.0f), 0.2f, "cube.mesh", "MtlPlat2.jpg", nullptr);
+	Ogre::Vector3 cannonPositions[2] = {
+		Ogre::Vector3(100,265,227),
+		Ogre::Vector3(-112,265,295)
+	};
+
+	cannons.resize(2);
+
+	for (unsigned int i = 0; i < cannons.size(); i++)
+	{
+		cannons[i].reset(new Cannon(cannonPositions[i]));
+		cannons[i]->setActor(application, Ogre::Vector3(0.0f), 0.2f, "cube.mesh", "MtlPlat2.jpg", nullptr);
+	}
 }
 
 // Create a ogre world environment with a predefined geometry and a texture
@@ -83,39 +92,6 @@ void GameWorld::CreateEnviroment()
 	
 }
 
-
-//Create light in the scene
-void GameWorld::CreateLights()
-{
-	
-	// create a spot light
-	
-	Ogre::String tempName = "SpotLight";
-    Ogre::Light* spotLight = application->GetSceneManager()->createLight(tempName);
-	spotLight->setType(Ogre::Light::LT_DIRECTIONAL);
-
-	//Set light colour 
-	spotLight->setDiffuseColour(0.8f, 0.8f, 0.8f); 
-	spotLight->setSpecularColour(0.5f, 0.5f, 0.5f);
-	//set the spot light corn beam width
-	spotLight->setSpotlightRange(Ogre::Degree(20), Ogre::Degree(50));
-	spotLight->setDirection(Ogre::Vector3( 0, -1, 1 ));
-	//Create a childSceneNode of the RootSceneNode
-	//Attach the light to it
-
-	Ogre::SceneNode* lightNode =  application->GetSceneManager()->getRootSceneNode()->createChildSceneNode(tempName.append("Node"));
-	lightNode->attachObject(spotLight);
-	//lightNode->setDirection(1.0f, 1.0f, 0.0f);
-	lightNode->setPosition(Ogre::Vector3(300.0, 300.0, 0.0));
-
-
-
-
-	Ogre::ColourValue ambientColour(0.2f, 0.2f, 0.2f, 1.0f);
-	application->GetSceneManager()->setAmbientLight(ambientColour);
-
-}
-
 void GameWorld::Run()
 {
 	
@@ -126,10 +102,10 @@ void GameWorld::Run()
 	 Ogre::String cameraName = "MainCamera";
 	 auto cameraNode = application->CreateCamera(cameraName, 
 		 application->GetSceneManager()->getSceneNode(heli->getNodeName()));
-	// cameraNode->setPosition(Ogre::Vector3(-80.0f, 60.0f, -80.0f));
 
+	 //Move it behind the helicopter
 	 cameraNode->translate(0.0f, 0.0f, -80.0f, Ogre::Node::TS_WORLD);
-	 //cameraNode->setAutoTracking(true, application->GetSceneManager()->getSceneNode(heli->getNodeName()));
+	 //Look at the helicopter
 	 static_cast<Ogre::Camera*>(cameraNode->getAttachedObject("MainCamera"))->lookAt(heli->getPos());
 	 shared_ptr<Ogre::MovableObject> cameraObject;
 	 cameraObject.reset(cameraNode->getAttachedObject("MainCamera"));
@@ -166,67 +142,12 @@ void GameWorld::Run()
 		lastTime = currentTime;
 		deltaTime_s = 0.001f * float(deltaTime);
 
-		
-
-		keyboard->capture();
-		mouse->capture();
-		camera->Update(keyboard.get(), mouse.get());
-
-		heli->handleInput(keyboard.get());
-
-		float coeff = 200.0f * deltaTime_s;
-		Ogre::Vector3 translation(Ogre::Vector3::ZERO);
-
-		if (keyboard->isKeyDown(OIS::KC_ESCAPE))
-		{
+		//Input Handling
+		if (handleInputs(mouse.get(), keyboard.get(), cameraNode.get(), camera.get()))
 			break;
-		}
-		else if (keyboard->isKeyDown(OIS::KC_V)){
-			auto camera = static_cast<Ogre::Camera*>(cameraNode->getAttachedObject("MainCamera"));
-			camera->setPolygonMode(Ogre::PM_WIREFRAME);
-		}
-		else if (keyboard->isKeyDown(OIS::KC_B))
-		{
-			auto camera = static_cast<Ogre::Camera*>(cameraNode->getAttachedObject("MainCamera"));
-			camera->setPolygonMode(Ogre::PM_POINTS);
-		}
-		else if (keyboard->isKeyDown(OIS::KC_N))
-		{
-			auto camera = static_cast<Ogre::Camera*>(cameraNode->getAttachedObject("MainCamera"));
-			camera->setPolygonMode(Ogre::PM_SOLID);
-		}
-		if (keyboard->isKeyDown(OIS::KC_R))
-		{
-			Reset();
-		}
-
-		if (keyboard->isKeyDown(OIS::KC_T))
-		{
-			//Fire a bullet and push it into the array of bullets
-			shared_ptr<Projectile> newBullet = cannon->fire();
-			
-			if (newBullet != nullptr)
-			{
-				newBullet->setActor(application, Ogre::Vector3(0.0f), 0.03f, "sphere.mesh", "floor_diffuse.PNG", nullptr);
-				bullets.push_back(newBullet);
-			}
-		}
 
 		frameEvent.timeSinceLastFrame = deltaTime;
 		trayManager->frameRenderingQueued(frameEvent);
-
-		//Heli Position
-		char buffer[256];
-		Ogre::SceneNode *helicopterNode = application->GetSceneManager()->getSceneNode(heli->getNodeName());
-		Ogre::Vector3 vValue = helicopterNode->getPosition();
-		sprintf_s(buffer, 256, "%4.2f %4.2f %4.2f", vValue.x, vValue.y, vValue.z);
-		paramPanel->setParamValue(0, buffer);
-
-		sprintf_s(buffer, 256, "%4.2f seconds", cannon->getRemainingReloadTime());
-		paramPanel->setParamValue(1, buffer);
-
-
-		const OIS::MouseState& mouseState = mouse->getMouseState();
 
 		elapsedTime += deltaTime;
 		if (elapsedTime > 100)
@@ -242,16 +163,10 @@ void GameWorld::Run()
 		{
 			timeToUpdate -= STEP_LENGTH;
 			
-			//static_cast<Ogre::Camera*>(cameraNode->getAttachedObject("MainCamera"))->lookAt(heli->getPos());
 			Update(deltaTime_s);
 
-			//application->GetSceneManager()->getSceneNode(heli->getNodeName())->rotate(Util::RotationMatrixXYZ(Ogre::Vector3(0,0,0.01f)));
-
 			static_cast<Ogre::Camera*>(cameraNode->getAttachedObject("MainCamera"))->lookAt(heli->getPos());
-			//cameraNode->setPosition(heli->getPos() + Ogre::Vector3(0, 10, -80));
-
-			
-
+	
 			numOfUpdates++;
 		}
 		
@@ -267,19 +182,18 @@ void GameWorld::Run()
  
 }
 
-void GameWorld::Reset()
-{
-
-}
-
 void GameWorld::UpdateGame(float dt)
 {
 	// Implement ...... 
 	heli->update(dt);
 	
-	cannon->update(dt);
-	cannon->aim(heli->getPos());
-
+	//Update and aim cannons
+	for (auto cannon : cannons)
+	{
+		cannon->update(dt);
+		cannon->aim(heli->getPos());
+	}
+	
 	for (unsigned int i = 0; i < bullets.size();)
 	{
 		auto bullet = bullets[i];
@@ -298,13 +212,68 @@ void GameWorld::UpdateGame(float dt)
 		
 }
 
-void GameWorld::UpdateScene(Ogre::Vector3 &pos, Ogre::Quaternion &q )
-{
-	// show updated position in Ogre
-}
-
 void GameWorld::Update(float dt)
 {
 	UpdateGame(dt);
 
+	//Heli Position
+	char buffer[256];
+	Ogre::SceneNode *helicopterNode = application->GetSceneManager()->getSceneNode(heli->getNodeName());
+	Ogre::Vector3 vValue = helicopterNode->getPosition();
+	sprintf_s(buffer, 256, "%4.2f %4.2f %4.2f", vValue.x, vValue.y, vValue.z);
+	paramPanel->setParamValue(0, buffer);
+
+	//Reload Time (Only gets it from one as they should be near identical)
+	sprintf_s(buffer, 256, "%4.2f seconds", cannons[0]->getRemainingReloadTime());
+	paramPanel->setParamValue(1, buffer);
+
+}
+
+bool GameWorld::handleInputs(OIS::Mouse* mouse, OIS::Keyboard* keyboard, Ogre::SceneNode* cameraNode, Camera* camera)
+{
+	keyboard->capture();
+	mouse->capture();
+	camera->Update(keyboard, mouse);
+	
+	heli->handleInput(keyboard);
+
+	//Quit Game
+	if (keyboard->isKeyDown(OIS::KC_ESCAPE))
+	{
+		return true;
+	}
+
+	//Debug Views
+	else if (keyboard->isKeyDown(OIS::KC_V)){
+		auto camera = static_cast<Ogre::Camera*>(cameraNode->getAttachedObject("MainCamera"));
+		camera->setPolygonMode(Ogre::PM_WIREFRAME);
+	}
+	else if (keyboard->isKeyDown(OIS::KC_B))
+	{
+		auto camera = static_cast<Ogre::Camera*>(cameraNode->getAttachedObject("MainCamera"));
+		camera->setPolygonMode(Ogre::PM_POINTS);
+	}
+	else if (keyboard->isKeyDown(OIS::KC_N))
+	{
+		auto camera = static_cast<Ogre::Camera*>(cameraNode->getAttachedObject("MainCamera"));
+		camera->setPolygonMode(Ogre::PM_SOLID);
+	}
+
+	//Fire Cannon
+	if (keyboard->isKeyDown(OIS::KC_SPACE))
+	{
+		for (auto cannon : cannons)
+		{
+			//Fire a bullet and push it into the array of bullets
+			shared_ptr<Projectile> newBullet = cannon->fire();
+
+			if (newBullet != nullptr)
+			{
+				newBullet->setActor(application, Ogre::Vector3(0.0f), 0.03f, "sphere.mesh", "floor_diffuse.PNG", nullptr);
+				bullets.push_back(newBullet);
+			}
+		}
+	}
+
+	return false;
 }
