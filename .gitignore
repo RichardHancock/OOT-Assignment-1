@@ -8,3 +8,5 @@ obj
 *.pdb
 *.log
 *.opensdf
+Docs
+/DoxgenLog.txt
