@@ -61,12 +61,12 @@ shared_ptr<Projectile> Cannon::fire()
 		proj = make_shared<Projectile>(pos);
 
 		//Gravity offset to stop the projectile falling short
-		direction.y += 0.13f;
+		direction.y += 0.11f;
 
 		proj->fire(direction * 100, 10.0f);
 
-		//Reset 7 sec delay
-		reloadDelay.reset(7.0f);
+		//Reset 4 sec delay
+		reloadDelay.reset(4.0f);
 
 		return proj;
 	}

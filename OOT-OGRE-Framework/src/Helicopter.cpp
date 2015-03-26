@@ -14,7 +14,7 @@ Helicopter::Helicopter(Ogre::Vector3 pos, float maxSpeed)
 
 Helicopter::~Helicopter() { }
 
-void Helicopter::setActor(OgreApplication* app, float angle, float scale, 
+void Helicopter::setActor(OgreApplication* app, Ogre::Vector3 angle, float scale, 
 	std::string meshFile, std::string textureFile, Ogre::SceneNode* parent)
 {
 	Entity::setActor(app, angle, scale, meshFile, textureFile, parent);
@@ -22,14 +22,14 @@ void Helicopter::setActor(OgreApplication* app, float angle, float scale,
 	Rotor* tempMainRotor = new Rotor(Ogre::Vector3(0.0f, 0.0f, -0.045f), 
 		1080, Ogre::Vector3(0,0,1));
 
-	tempMainRotor->setActor(app,0,1,"topRotor.mesh", "green.png", node.get());
+	tempMainRotor->setActor(app, Ogre::Vector3(0.0f), 1, "topRotor.mesh", "green.png", node.get());
 
 	mainRotor.reset(tempMainRotor);
 
 	Rotor* tempAftRotor = new Rotor(Ogre::Vector3(-0.015f, -0.11f, -0.004f), 
 		1080, Ogre::Vector3(1,0,0));
 
-	tempAftRotor->setActor(app,0,1,"aftRotor.mesh", "green.png", node.get());
+	tempAftRotor->setActor(app, Ogre::Vector3(0.0f), 1, "aftRotor.mesh", "green.png", node.get());
 	
 	aftRotor.reset(tempAftRotor);
 

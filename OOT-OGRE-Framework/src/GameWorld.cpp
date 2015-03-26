@@ -62,44 +62,18 @@ void GameWorld::CreateEntities()
 	application->SetEntityColour("GREEN", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::ColourValue(0.1f, 0.8f, 0.1f), Ogre::ColourValue(0.0f, 0.6f, 0.0f), 50.0f);
 
 	heli.reset(new Helicopter(Ogre::Vector3(0,300,0), 100.0f));
-	heli->setActor(application, 90.0f, 200.0f, "helicopter.mesh", "green.png", nullptr);
+	heli->setActor(application, Ogre::Vector3(90.0f, 0.0f, 0.0f), 200.0f, "helicopter.mesh", "green.png", nullptr);
 
 	cannon.reset(new Cannon(Ogre::Vector3(100,270,227)));
-	cannon->setActor(application, 0.0f, 0.2f, "cube.mesh", "green.png", nullptr);
+	cannon->setActor(application, Ogre::Vector3(0.0f), 0.2f, "cube.mesh", "MtlPlat2.jpg", nullptr);
 }
 
 // Create a ogre world environment with a predefined geometry and a texture
 void GameWorld::CreateEnviroment()
 {
-	/*
-	// Create a plane and apply a texture to it
-	Ogre::Plane plane(Ogre::Vector3::UNIT_Y, 0);
-	Ogre::MeshManager::getSingleton().createPlane("ground", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane, 400, 400, 200, 200, true, 5, 5, 5, Ogre::Vector3::UNIT_Z);
-
-	Ogre::String tempName = "Ground";
-	Ogre::Entity* ground = application->GetSceneManager()->createEntity("Ground", "ground");
-	ground->setCastShadows(false);
-
-	Ogre::SceneNode* groundNode = application->GetSceneManager()->getRootSceneNode()->createChildSceneNode(tempName.append("Node"));
-	groundNode->attachObject(ground);
-	groundNode->setPosition(0.0f, 0.0f, 0.0f);
-
-	Ogre::MaterialPtr material = Ogre::MaterialManager::getSingleton().create("GroundTexture", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-	Ogre::Technique* firstTechnique = material->getTechnique(0);
-	Ogre::Pass* firstPass = firstTechnique->getPass(0);
-
-	Ogre::TextureUnitState* textureUnit = firstPass->createTextureUnitState();
-	textureUnit->setTextureName("checker.png", Ogre::TEX_TYPE_2D);  // BeachStones.jpg
-	textureUnit->setTextureCoordSet(0);
-
-	const Ogre::String& materialName = "GroundTexture";
-	ground->setMaterialName(materialName);
-	*/
-	
 	terrainManager = make_shared<TerrainManager>();
 	terrainManager->Create(application->GetSceneManager());
 	terrainManager->Loaded();
-
 
 	Ogre::Plane plane;
 	plane.d = 100;
@@ -233,7 +207,7 @@ void GameWorld::Run()
 			
 			if (newBullet != nullptr)
 			{
-				newBullet->setActor(application,0.0f, 0.03f, "sphere.mesh", "green.png", nullptr);
+				newBullet->setActor(application, Ogre::Vector3(0.0f), 0.03f, "sphere.mesh", "floor_diffuse.PNG", nullptr);
 				bullets.push_back(newBullet);
 			}
 		}

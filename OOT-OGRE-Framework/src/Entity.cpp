@@ -23,7 +23,7 @@ void Entity::setPos(Ogre::Vector3 newPos)
 	pos = newPos;
 }
 
-void Entity::setActor(OgreApplication* app, float angle, float scale,
+void Entity::setActor(OgreApplication* app, Ogre::Vector3 angle, float scale,
 					  std::string meshFile, std::string textureFile, Ogre::SceneNode* parent)
 {
 	//Create node name from class name and Unique ID
@@ -32,29 +32,18 @@ void Entity::setActor(OgreApplication* app, float angle, float scale,
 	//Now this ID has been used, generate a new one
 	generateNextID();
 
-	float angleRadians = angle * Ogre::Math::PI / 180.0f;
-	Ogre::Matrix3 rotateX(Util::RotationMatrixXYZ(Ogre::Vector3(angleRadians, 0, 0)));
+	//Convert to radians
+	Util::deg2Rad(angle);
 
-	Ogre::Quaternion orientationQ(rotateX);
+	Ogre::Matrix3 rotation(Util::RotationMatrixXYZ(angle));
+
+	Ogre::Quaternion orientationQ(rotation);
 
 	auto mesh = app->GetSceneManager()->createEntity(meshFile);
 	mesh->setCastShadows(false);
 
-	std::string materialName = textureFile.substr(0, textureFile.length() - 4);
-
-	//Creates a material using the texture file name minus 4 characters (.png)
-	Ogre::MaterialPtr material =
-		Ogre::MaterialManager::getSingleton().create(
-		materialName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-
-	Ogre::Technique* firstTechnique = material->getTechnique(0);
-	Ogre::Pass* firstPass = firstTechnique->getPass(0);
-
-	Ogre::TextureUnitState* textureUnit = firstPass->createTextureUnitState();
-	textureUnit->setTextureName(textureFile, Ogre::TEX_TYPE_2D);
-	textureUnit->setTextureCoordSet(0);
-
-	mesh->setMaterialName(materialName);
+	//Load the texture and apply it to the mesh
+	mesh->setMaterialName(loadTexture(textureFile));
 
 	Ogre::SceneNode* tempNode;
 
@@ -78,6 +67,28 @@ void Entity::setActor(OgreApplication* app, float angle, float scale,
 	node.reset(tempNode);
 
 }
+
+std::string Entity::loadTexture(std::string filename)
+{
+	//Cuts the file extension off and uses the rest for the material name
+	size_t dotPosition = filename.find('.', 0);
+	std::string materialName = filename.substr(0, dotPosition);
+
+	//Creates a material using the texture file name minus 4 characters (.png)
+	Ogre::MaterialPtr material =
+		Ogre::MaterialManager::getSingleton().create(
+		materialName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+	Ogre::Technique* firstTechnique = material->getTechnique(0);
+	Ogre::Pass* firstPass = firstTechnique->getPass(0);
+
+	Ogre::TextureUnitState* textureUnit = firstPass->createTextureUnitState();
+	textureUnit->setTextureName(filename, Ogre::TEX_TYPE_2D);
+	textureUnit->setTextureCoordSet(0);
+
+	return materialName;
+}
+
 
 void Entity::update(float dt)
 {

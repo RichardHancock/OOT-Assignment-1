@@ -70,6 +70,13 @@ namespace Util
 		return matZ;
 	}
 
+	void deg2Rad(Ogre::Vector3& deg)
+	{
+		deg.x = deg2Rad(deg.x);
+		deg.y = deg2Rad(deg.y);
+		deg.z = deg2Rad(deg.z);
+	}
+
 	float deg2Rad(float deg)
 	{
 		return deg * 0.0174532925f;

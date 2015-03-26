@@ -16,7 +16,7 @@ public:
 
 	virtual ~Helicopter();
 
-	virtual void setActor(OgreApplication* app, float angle, float scale, 
+	virtual void setActor(OgreApplication* app, Ogre::Vector3 angle, float scale, 
 		std::string meshFile, std::string textureFile, Ogre::SceneNode* parent);
 
 	virtual void update(float dt);

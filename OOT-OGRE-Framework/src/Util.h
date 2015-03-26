@@ -10,6 +10,8 @@ namespace Util
 	Ogre::Matrix3 rotate_y(float angle);
 	Ogre::Matrix3 rotate_z(float angle);
 
+	void deg2Rad(Ogre::Vector3& deg);
+
 	float deg2Rad(float deg);
 	
 	void applyDrag(Ogre::Vector3& value, float dragAmount);
