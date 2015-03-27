@@ -67,7 +67,7 @@ void TerrainManager::Create( Ogre::SceneManager* sMgr)
 	terrainGroup->freeTemporaryResources();
  
     Ogre::ColourValue fadeColour(0.9f, 0.9f, 0.9f);
-    sceneMgr->setFog(Ogre::FOG_LINEAR, fadeColour, 0.f, 300.f, 600.f);
+    //sceneMgr->setFog(Ogre::FOG_LINEAR, fadeColour, 0.f, 300.f, 600.f);
    
 }
 

@@ -34,9 +34,10 @@ public:
 
 	/**
 	@brief Fire the cannon at the current direction vector. Only Fires if the reloadDelay has finished.
+	@param OgreApplication* - Application Pointer
 	@return shared_ptr<Projectile> - The fired bullet
 	*/
-	shared_ptr<Projectile> fire();
+	shared_ptr<Projectile> fire(OgreApplication* app);
 
 	/**
 	@brief Returns the remaining time before the cannon can be fired again

@@ -64,7 +64,6 @@ private:
 	///Vector of all fired bullets
 	std::vector<shared_ptr<Projectile>> bullets;
 
-
 	//GUI
 	shared_ptr<OgreBites::SdkTrayManager> trayManager;
 	Ogre::FrameEvent frameEvent;
@@ -76,6 +75,12 @@ private:
 
 	///Application pointer
 	OgreApplication* application;
+
+	///Amount of bullets that the cannons have fired in total
+	unsigned int bulletsFired;
+
+	///Amount of bullets that have hit the helicopter
+	unsigned int bulletsHit;
 	
 public:
 	/**

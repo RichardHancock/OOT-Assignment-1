@@ -102,6 +102,9 @@ namespace Util
 		*/
 		void reset(float newDuration);
 
+		///Stops the currently running timer 
+		void stop();
+
 		/**
 		@brief Increments the timer (Required for operation)
 		@param float - Delta time 

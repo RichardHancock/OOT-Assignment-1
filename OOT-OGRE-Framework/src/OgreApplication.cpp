@@ -106,7 +106,7 @@ shared_ptr<Ogre::SceneNode>  OgreApplication::CreateCamera(Ogre::String  name, O
 	float ratio = static_cast<float>(viewport->getActualWidth()) / static_cast<float>(viewport->getActualHeight());
 	camera->setAspectRatio(ratio);
 	camera->setNearClipDistance(0.01f);
-	camera->setFarClipDistance(50000.0f);
+	camera->setFarClipDistance(500000.0f);
 	
 	// Set the window to be active
 	renderWindow->setActive(true);

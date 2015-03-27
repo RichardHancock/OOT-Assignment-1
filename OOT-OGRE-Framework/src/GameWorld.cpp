@@ -21,6 +21,8 @@ GameWorld::GameWorld(OgreApplication* application_)
 	trayManager = nullptr;
 	terrainManager = nullptr;
 	frameEvent = Ogre::FrameEvent();
+	bulletsFired = 0;
+	bulletsHit = 0;
 }
 
 
@@ -50,6 +52,8 @@ void GameWorld::CreateGUI()
 	Ogre::StringVector parameters;
 	parameters.push_back("Helicopter Position");
 	parameters.push_back("Current Reload Time");
+	parameters.push_back("Bullets Fired");
+	parameters.push_back("Bullet Hits on Helicopter");
 	paramPanel = trayManager->createParamsPanel(OgreBites::TL_TOPLEFT,"Parameter Panel", 350, parameters);
 }
 
@@ -200,6 +204,14 @@ void GameWorld::UpdateGame(float dt)
 
 		bullet->update(dt);
 
+		
+		if (bullet->getPos().distance(heli->getPos()) < 15.0f)
+		{
+			bullet->hit();
+			bulletsHit++;
+		}
+
+
 		if (bullet->expired())
 		{
 			bullets.erase(bullets.begin() + i);
@@ -226,6 +238,14 @@ void GameWorld::Update(float dt)
 	//Reload Time (Only gets it from one as they should be near identical)
 	sprintf_s(buffer, 256, "%4.2f seconds", cannons[0]->getRemainingReloadTime());
 	paramPanel->setParamValue(1, buffer);
+
+	//Bullets fired
+	sprintf_s(buffer, 256, "%i", bulletsFired);
+	paramPanel->setParamValue(2, buffer);
+
+	//Bullet hits on helicopter
+	sprintf_s(buffer, 256, "%i", bulletsHit);
+	paramPanel->setParamValue(3, buffer);
 
 }
 
@@ -265,11 +285,11 @@ bool GameWorld::handleInputs(OIS::Mouse* mouse, OIS::Keyboard* keyboard, Ogre::S
 		for (auto cannon : cannons)
 		{
 			//Fire a bullet and push it into the array of bullets
-			shared_ptr<Projectile> newBullet = cannon->fire();
+			shared_ptr<Projectile> newBullet = cannon->fire(application);
 
 			if (newBullet != nullptr)
 			{
-				newBullet->setActor(application, Ogre::Vector3(0.0f), 0.03f, "sphere.mesh", "floor_diffuse.PNG", nullptr);
+				bulletsFired++;
 				bullets.push_back(newBullet);
 			}
 		}

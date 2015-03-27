@@ -10,6 +10,7 @@
 #include <OgreMaterialManager.h>
 #include <OgreEntity.h>
 #include <OgreMeshManager.h>
+#include "OgreParticleSystem.h"
 #include <OgreParticle.h>
 #include <OgreSceneNode.h>
 #include <OgreTimer.h>

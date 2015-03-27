@@ -30,14 +30,18 @@ public:
 	@brief Fire the projectile along the passed in direction
 	@param Ogre::Vector3 - Launch vector
 	@param float - Gravity influence
+	@param OgreApplication* - Application pointer
 	*/
-	void fire(Ogre::Vector3 fireVelocity, float gravity);
+	void fire(Ogre::Vector3 fireVelocity, float gravity, OgreApplication* app);
 
 	/**
 	@brief Has the bullet reached the end of its lifespan
 	@return bool - True if expired, else false
 	*/
 	bool expired();
+
+	///Projectile was hit so will be flagged for deletion
+	void hit();
 
 private:
 	
@@ -49,5 +53,11 @@ private:
 
 	///Timer keeping track of the projectiles lifespan
 	Util::Timer lifespan;
+
+	///Particle system used to display a trail behind the projectile
+	Ogre::ParticleSystem* particleTrail;
+
+	///Particle scene node
+	std::shared_ptr<Ogre::SceneNode> particleNode;
 
 };

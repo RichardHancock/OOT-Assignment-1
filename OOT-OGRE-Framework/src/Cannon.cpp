@@ -52,7 +52,7 @@ void Cannon::aim(Ogre::Vector3 targetPos)
 	targetPrevPos = targetPos;
 }
 
-shared_ptr<Projectile> Cannon::fire()
+shared_ptr<Projectile> Cannon::fire(OgreApplication* app)
 {
 	if (reloadDelay.hasTimerFinished())
 	{
@@ -60,11 +60,13 @@ shared_ptr<Projectile> Cannon::fire()
 
 		proj = make_shared<Projectile>(pos);
 
+		proj->setActor(app, Ogre::Vector3(0.0f), 0.03f, "sphere.mesh", "floor_diffuse.PNG", nullptr);
+
 		//Gravity offset to stop the projectile falling short
 		direction.y += 0.11f;
 
-		proj->fire(direction * 250, 60.0f);
-
+		proj->fire(direction * 250, 60.0f, app);
+		
 		//Reset 4 sec delay
 		reloadDelay.reset(4.0f);
 

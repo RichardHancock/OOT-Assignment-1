@@ -177,6 +177,11 @@ namespace Util
 		duration = newDuration;
 	}
 
+	void Timer::stop()
+	{
+		current = duration;
+	}
+
 	void Timer::update(float dt)
 	{
 		if (!hasTimerFinished())

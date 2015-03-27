@@ -31,18 +31,31 @@ void Projectile::update(float dt)
 	Entity::update(dt);
 }
 
-void Projectile::fire(Ogre::Vector3 fireVelocity, float gravity)
+void Projectile::fire(Ogre::Vector3 fireVelocity, float gravity, OgreApplication* app)
 {
 	this->vel = fireVelocity;
 	fired = true;
 
 	this->gravity = gravity;
 
-	lifespan.reset(20.0f);
+	//Start Particle System
+	particleTrail = app->GetSceneManager()->createParticleSystem("sun: " + nodeName, "Space/Sun");
+
+	particleNode.reset(node->createChildSceneNode("Particle: " + nodeName));
+	particleNode->attachObject(particleTrail);
+
+
+	lifespan.reset(10.0f);
 }
 
 bool Projectile::expired()
 {
 	//If the projectile has been fired and its timer ran out it is expired
 	return (fired && lifespan.hasTimerFinished());
+}
+
+void Projectile::hit()
+{
+	//Stops the timer so the next expired check will delete it 
+	lifespan.stop();
 }
